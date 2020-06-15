@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.functions.infrastructural.function;
+package com.example.serverlessmapreducejava.functions.infrastructural;
 
 import com.example.serverlessmapreducejava.domain.Classification;
 import com.example.serverlessmapreducejava.domain.aws.AwsEvent;

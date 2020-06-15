@@ -1,10 +1,8 @@
-package com.example.serverlessmapreducejava.functions.infrastructural.function;
+package com.example.serverlessmapreducejava.functions.infrastructural;
 
 import com.example.serverlessmapreducejava.domain.Classification;
 import com.example.serverlessmapreducejava.domain.gcp.GcsEvent;
 import com.example.serverlessmapreducejava.utils.database.ClassificationDao;
-import com.example.serverlessmapreducejava.utils.queue.QueueSender;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
