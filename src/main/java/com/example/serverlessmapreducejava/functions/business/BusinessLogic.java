@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,14 +26,18 @@ public class BusinessLogic {
     }
 
     @Bean
-    @SneakyThrows
     public Consumer<String> read() {
         return pathString -> {
             Path path = Paths.get(URI.create(pathString));
-            try (Stream<String> lines = Files.lines(path)) {
+            try (Stream<String> lines = getLines(path)) {
                 lines.map(toAnimal()).forEach(consume);
             }
         };
+    }
+
+    @SneakyThrows
+    private Stream<String> getLines(Path path) {
+        return Files.lines(path);
     }
 
     @Bean
