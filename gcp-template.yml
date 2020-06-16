@@ -20,22 +20,5 @@ resources:
             type: STRING
           - name: wild
             type: BOOL
-  - name: read-animals-function
-    type: gcp-types/cloudfunctions-v1:projects.locations.functions
-    properties:
-      function: read-animals-function
-      parent: projects/serverless-map-reduce/locations/us-central1
-      sourceArchiveUrl: gs://$(ref.functions-bucket.name)/serverless-map-reduce-java-0.0.1-SNAPSHOT.jar
-      environmentVariables:
-        SPRING_PROFILES_ACTIVE: gcp,read
-        BIGQUERY_DATASET_NAME: $(ref.animals-dataset.datasetReference.datasetId)
-        BIGQUERY_TABLE_NAME: $(ref.classified-animals-table.tableReference.tableId)
-      entryPoint: org.springframework.cloud.function.adapter.gcp.GcfJarLauncher
-      eventTrigger:
-        resource: projects/serverless-map-reduce/buckets/animals-csv
-        eventType: google.storage.object.finalize
-      timeout: 60s
-      availableMemoryMb: 256
-      runtime: java11
 
 

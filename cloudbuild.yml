@@ -5,7 +5,7 @@ steps:
       - deployment-manager
       - deployments
       - update
-      - serverless-map-reduce
+      - serverless-map-reduce-java
       - --config=gcp-template.yml
       - --description="Infrastructure for serverless-map-reduce"
   - name: maven:3-jdk-11
