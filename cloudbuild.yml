@@ -6,7 +6,7 @@ steps:
       - deployments
       - update
       - serverless-map-reduce
-      - --config=infrastructure/gcp/template.yml
+      - --config=gcp-template.yml
       - --description="Infrastructure for serverless-map-reduce"
   - name: maven:3-jdk-11
     id: Build jar
