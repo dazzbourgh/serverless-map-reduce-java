@@ -12,7 +12,7 @@ steps:
     id: Build jar
     entrypoint: mvn
     args: ['clean', 'package']
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - name: gcr.io/cloud-builders/gcloud
     id: Deploy read-animals function
     args: ['functions', 'deploy', 'read-animals',
            '--entry-point', 'org.springframework.cloud.function.adapter.gcp.GcfJarLauncher',
@@ -20,4 +20,4 @@ steps:
            '--source', 'target/deploy',
            '--memory', '256MB',
            '--trigger-bucket', 'animals-csv',
-           '--set-env-vars', 'SPRING_PROFILES_ACTIVE=^:^read:gcp,PUBSUB_TOPIC=classified-animals-queue,GCP_PROJECT=serverless-map-reduce,BIGQUERY_DATASET_NAME=animals_dataset,BIGQUERY_TABLE_NAME=classified-animals-table']
+           '--env-vars-file', 'env/.read-gcp.yml']
