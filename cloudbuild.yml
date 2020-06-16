@@ -20,5 +20,5 @@ steps:
            '--source', 'target/deploy',
            '--memory', '256MB',
            '--trigger-bucket', 'animals-csv',
-           '--set-env-vars', 'SPRING_PROFILES_ACTIVE="read,gcp",PUBSUB_TOPIC=classified-animals-queue']
+           '--set-env-vars', 'SPRING_PROFILES_ACTIVE=^:^read:gcp,PUBSUB_TOPIC=classified-animals-queue']
 #BIGQUERY_DATASET_NAME=animals_dataset,BIGQUERY_TABLE_NAME=classified-animals-table
