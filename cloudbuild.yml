@@ -1,0 +1,24 @@
+steps:
+  - name: gcr.io/cloud-builders/gcloud
+    id: Deploy infrastructure
+    args:
+      - deployment-manager
+      - deployments
+      - update
+      - serverless-map-reduce
+      - --config=infrastructure/gcp/template.yml
+      - --description="Infrastructure for serverless-map-reduce"
+  - name: maven:3-jdk-11
+    id: Build jar
+    entrypoint: mvn
+    args: ['clean', 'package']
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: Deploy read-animals function
+    args: ['functions', 'deploy', 'read-animals',
+           '--entry-point', 'org.springframework.cloud.function.adapter.gcp.GcfJarLauncher',
+           '--runtime', 'java11',
+           '--source', 'target/deploy',
+           '--memory', '256MB',
+           '--trigger-bucket', 'animals-csv',
+           '--set-env-vars', 'SPRING_PROFILES_ACTIVE="read,gcp",PUBSUB_TOPIC=classified-animals-queue']
+#BIGQUERY_DATASET_NAME=animals_dataset,BIGQUERY_TABLE_NAME=classified-animals-table

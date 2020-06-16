@@ -6,3 +6,4 @@ gcp:
       name: ${BIGQUERY_DATASET_NAME}
     table:
       name: ${BIGQUERY_TABLE_NAME}
+topic: ${PUBSUB_TOPIC}
