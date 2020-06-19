@@ -1,5 +1,5 @@
 SPRING_PROFILES_ACTIVE: read,gcp
-PUBSUB_TOPIC: classified-animals-queue
+PUBSUB_TOPIC: classified-animals-topic
 GCP_PROJECT: serverless-map-reduce
 BIGQUERY_DATASET_NAME: animals_dataset
 BIGQUERY_TABLE_NAME: classified-animals-table

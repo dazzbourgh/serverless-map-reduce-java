@@ -1,7 +1,7 @@
 package com.example.serverlessmapreducejava.utils.queue;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
@@ -26,7 +26,7 @@ public class PubSubQueueSender implements QueueSender {
 
     @Override
     @SneakyThrows
-    public void send(Object object, String topic) {
+    public ApiFuture<String> send(Object object, String topic) {
         TopicName topicName = TopicName.of(projectId, topic);
 
         Publisher publisher = null;
@@ -35,7 +35,7 @@ public class PubSubQueueSender implements QueueSender {
             publisher = Publisher.newBuilder(topicName).build();
             ByteString data = ByteString.copyFromUtf8(message);
             PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
-            publisher.publish(pubsubMessage);
+            return publisher.publish(pubsubMessage);
         } finally {
             if (publisher != null) {
                 publisher.shutdown();

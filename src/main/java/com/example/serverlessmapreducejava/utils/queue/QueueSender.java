@@ -1,5 +1,7 @@
 package com.example.serverlessmapreducejava.utils.queue;
 
+import com.google.api.core.ApiFuture;
+
 public interface QueueSender {
-    void send(Object object, String topic);
+    ApiFuture<String> send(Object object, String topic);
 }
