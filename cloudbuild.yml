@@ -18,6 +18,6 @@ steps:
            '--entry-point', 'org.springframework.cloud.function.adapter.gcp.GcfJarLauncher',
            '--runtime', 'java11',
            '--source', 'target/deploy',
-           '--memory', '256MB',
+           '--memory', '512MB',
            '--trigger-bucket', 'animals-csv',
            '--env-vars-file', 'env/.read-gcp.yml']
