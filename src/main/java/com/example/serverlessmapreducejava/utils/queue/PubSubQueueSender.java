@@ -1,6 +1,7 @@
 package com.example.serverlessmapreducejava.utils.queue;
 
-import com.google.api.core.ApiFuture;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
@@ -16,9 +17,11 @@ import java.util.concurrent.TimeUnit;
 @ConditionalOnProperty(value = "provider", havingValue = "gcp")
 public class PubSubQueueSender implements QueueSender {
     private final String projectId;
+    private final ObjectWriter ow;
 
-    public PubSubQueueSender(@Value("${gcp.project.id}") String projectId) {
+    public PubSubQueueSender(@Value("${gcp.project.id}") String projectId, ObjectWriter ow) {
         this.projectId = projectId;
+        this.ow = ow;
     }
 
     @Override
@@ -28,8 +31,8 @@ public class PubSubQueueSender implements QueueSender {
 
         Publisher publisher = null;
         try {
+            String message = ow.writeValueAsString(object);
             publisher = Publisher.newBuilder(topicName).build();
-            String message = object.toString();
             ByteString data = ByteString.copyFromUtf8(message);
             PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
             publisher.publish(pubsubMessage);
