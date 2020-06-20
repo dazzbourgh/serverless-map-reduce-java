@@ -2,6 +2,7 @@ package com.example.serverlessmapreducejava.functions.business;
 
 import com.example.serverlessmapreducejava.domain.Animal;
 import com.example.serverlessmapreducejava.domain.Classification;
+import com.example.serverlessmapreducejava.utils.database.ClassificationDao;
 import com.example.serverlessmapreducejava.utils.queue.QueueSender;
 import com.example.serverlessmapreducejava.utils.storage.StorageService;
 import lombok.SneakyThrows;
@@ -22,11 +23,14 @@ import static java.util.stream.Collectors.toList;
 public class BusinessLogic {
     private final Function<Animal, CompletableFuture<Void>> consume;
     private final StorageService storageService;
+    private final ClassificationDao classificationDao;
 
     public BusinessLogic(QueueSender queueSender,
                          @Value("${topic}") String topic,
-                         StorageService storageService) {
+                         StorageService storageService,
+                         ClassificationDao classificationDao) {
         this.storageService = storageService;
+        this.classificationDao = classificationDao;
         this.consume = animal -> queueSender.send(animal, topic);
     }
 
@@ -53,6 +57,10 @@ public class BusinessLogic {
         };
     }
 
+    @Bean
+    public Consumer<Classification> store() {
+        return classificationDao::save;
+    }
 
     private Function<String, Animal> toAnimal() {
         return line -> {
