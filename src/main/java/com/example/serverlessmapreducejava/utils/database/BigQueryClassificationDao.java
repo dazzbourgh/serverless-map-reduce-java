@@ -18,8 +18,8 @@ public class BigQueryClassificationDao implements ClassificationDao {
     private final String tableName;
     private final BigQuery bigQuery;
 
-    public BigQueryClassificationDao(@Value("${gcp.bigquery.dataset.name") String datasetName,
-                                     @Value("${gcp.bigquery.table.name")String tableName,
+    public BigQueryClassificationDao(@Value("${gcp.bigquery.dataset.name}") String datasetName,
+                                     @Value("${gcp.bigquery.table.name}")String tableName,
                                      BigQuery bigQuery) {
         this.datasetName = datasetName;
         this.tableName = tableName;
