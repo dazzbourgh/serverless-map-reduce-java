@@ -20,5 +20,7 @@ resources:
             type: STRING
           - name: wild
             type: BOOL
+          - name: favorite
+            type: BOOL
 
 
