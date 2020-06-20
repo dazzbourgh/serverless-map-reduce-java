@@ -1,7 +1,6 @@
 package com.example.serverlessmapreducejava.utils.queue;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -25,17 +25,21 @@ public class PubSubQueueSender implements QueueSender {
     }
 
     @Override
-    @SneakyThrows
-    public ApiFuture<String> send(Object object, String topic) {
+    public CompletableFuture<Void> send(Object object, String topic) {
         TopicName topicName = TopicName.of(projectId, topic);
 
+        return CompletableFuture.runAsync(() -> send(object, topicName));
+    }
+
+    @SneakyThrows
+    private void send(Object object, TopicName topicName) {
         Publisher publisher = null;
         try {
             String message = ow.writeValueAsString(object);
             publisher = Publisher.newBuilder(topicName).build();
             ByteString data = ByteString.copyFromUtf8(message);
             PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
-            return publisher.publish(pubsubMessage);
+            publisher.publish(pubsubMessage).get();
         } finally {
             if (publisher != null) {
                 publisher.shutdown();

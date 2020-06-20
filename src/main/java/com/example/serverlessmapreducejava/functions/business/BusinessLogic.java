@@ -4,7 +4,6 @@ import com.example.serverlessmapreducejava.domain.Animal;
 import com.example.serverlessmapreducejava.domain.Classification;
 import com.example.serverlessmapreducejava.utils.queue.QueueSender;
 import com.example.serverlessmapreducejava.utils.storage.StorageService;
-import com.google.api.core.ApiFuture;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,13 +15,12 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.concurrent.CompletableFuture.allOf;
-import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
 @Component
 public class BusinessLogic {
-    private final Function<Animal, ApiFuture<String>> consume;
+    private final Function<Animal, CompletableFuture<Void>> consume;
     private final StorageService storageService;
 
     public BusinessLogic(QueueSender queueSender,
@@ -39,7 +37,6 @@ public class BusinessLogic {
                 var future = lines
                         .map(toAnimal())
                         .map(consume)
-                        .map(apiFuture -> runAsync(() -> runSafely(apiFuture)))
                         .collect(collectingAndThen(toList(),
                                 futures -> allOf(futures.toArray(new CompletableFuture[0]))));
                 await(future);
@@ -62,11 +59,6 @@ public class BusinessLogic {
             String[] words = line.split(",");
             return new Animal(words[0], Boolean.getBoolean(words[1]));
         };
-    }
-
-    @SneakyThrows
-    private void runSafely(ApiFuture<String> apiFuture) {
-        apiFuture.get();
     }
 
     @SneakyThrows

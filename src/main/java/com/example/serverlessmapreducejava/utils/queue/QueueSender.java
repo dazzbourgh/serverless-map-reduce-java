@@ -1,7 +1,7 @@
 package com.example.serverlessmapreducejava.utils.queue;
 
-import com.google.api.core.ApiFuture;
+import java.util.concurrent.CompletableFuture;
 
 public interface QueueSender {
-    ApiFuture<String> send(Object object, String topic);
+    CompletableFuture<Void> send(Object object, String topic);
 }
