@@ -6,6 +6,7 @@ import com.example.serverlessmapreducejava.domain.gcp.PubSubEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.function.Function;
 @Component
 @ConditionalOnProperty(value = "provider", havingValue = "gcp")
 @AllArgsConstructor
+@Slf4j
 public class GcpInfrastructuralLogic implements InfrastructuralLogic<GcsEvent, PubSubEvent> {
     private final ObjectMapper objectMapper;
 
@@ -34,6 +36,7 @@ public class GcpInfrastructuralLogic implements InfrastructuralLogic<GcsEvent, P
 
     @SneakyThrows
     private Animal getAnimal(PubSubEvent event) {
+        log.info(String.format("Received Pub/Sub event:\n%s", objectMapper.writeValueAsString(event)));
         return objectMapper.readValue(event.getData(), Animal.class);
     }
 }
