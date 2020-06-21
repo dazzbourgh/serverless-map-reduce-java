@@ -1,7 +1,7 @@
-name,type
-dog,pet
-cat,pet
-polar bear,wild
-salmon,wild
-elk,wild
-baikal seal,wild
+type,wild
+dog,false
+cat,false
+polar bear,true
+salmon,true
+elk,true
+baikal seal,true

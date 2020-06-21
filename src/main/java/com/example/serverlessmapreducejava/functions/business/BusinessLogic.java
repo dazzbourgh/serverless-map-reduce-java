@@ -39,6 +39,7 @@ public class BusinessLogic {
         return pathString -> {
             try (Stream<String> lines = storageService.get(pathString)) {
                 var future = lines
+                        .skip(1)
                         .map(toAnimal())
                         .map(consume)
                         .collect(collectingAndThen(toList(),
