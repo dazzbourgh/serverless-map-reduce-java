@@ -11,4 +11,9 @@ public class GeneralConfig {
     public ObjectWriter objectWriter() {
         return new ObjectMapper().writer().withDefaultPrettyPrinter();
     }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
 }
