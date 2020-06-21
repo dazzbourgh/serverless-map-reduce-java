@@ -4,7 +4,6 @@ import com.example.serverlessmapreducejava.domain.Animal;
 import com.example.serverlessmapreducejava.domain.gcp.GcsEvent;
 import com.example.serverlessmapreducejava.domain.gcp.PubSubEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -23,8 +22,8 @@ public class GcpInfrastructuralLogic implements InfrastructuralLogic<GcsEvent, P
     @Bean
     public Function<GcsEvent, String> extractFilePath() {
         return event -> String.format("gs://%s/%s",
-                event.getJsonPayload().getBucket(),
-                event.getJsonPayload().getName());
+                event.getBucket(),
+                event.getName());
     }
 
     @Override

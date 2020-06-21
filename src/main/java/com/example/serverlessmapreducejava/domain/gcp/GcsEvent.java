@@ -2,7 +2,13 @@ package com.example.serverlessmapreducejava.domain.gcp;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class GcsEvent {
-    private JsonPayload jsonPayload;
+    private String bucket;
+    private String name;
+    private String metageneration;
+    private Date timeCreated;
+    private Date updated;
 }
