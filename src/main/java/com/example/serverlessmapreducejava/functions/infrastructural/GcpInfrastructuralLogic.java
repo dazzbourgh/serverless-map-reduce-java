@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
 import java.util.function.Function;
 
 @Component
@@ -37,6 +38,7 @@ public class GcpInfrastructuralLogic implements InfrastructuralLogic<GcsEvent, P
     @SneakyThrows
     private Animal getAnimal(PubSubEvent event) {
         log.info(String.format("Received Pub/Sub event:\n%s", objectMapper.writeValueAsString(event)));
-        return objectMapper.readValue(event.getData(), Animal.class);
+        String data = new String(Base64.getDecoder().decode(event.getData()));
+        return objectMapper.readValue(data, Animal.class);
     }
 }
