@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.specific.utils.storage;
+package com.example.serverlessmapreducejava.specific.utils;
 
 import java.util.stream.Stream;
 

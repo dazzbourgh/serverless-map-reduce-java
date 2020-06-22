@@ -1,6 +1,7 @@
-package com.example.serverlessmapreducejava.specific.utils.database;
+package com.example.serverlessmapreducejava.specific.utils.gcp;
 
 import com.example.serverlessmapreducejava.specific.domain.Classification;
+import com.example.serverlessmapreducejava.specific.utils.ClassificationDao;
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.BigQueryError;
 import com.google.cloud.bigquery.InsertAllRequest;

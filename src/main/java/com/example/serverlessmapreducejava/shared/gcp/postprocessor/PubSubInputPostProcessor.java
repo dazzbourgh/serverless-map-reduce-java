@@ -1,12 +1,13 @@
-package com.example.serverlessmapreducejava.shared.postprocessors;
+package com.example.serverlessmapreducejava.shared.gcp.postprocessor;
 
 import com.example.serverlessmapreducejava.specific.domain.gcp.PubSubEvent;
-import com.example.serverlessmapreducejava.shared.annotation.PubSubInput;
+import com.example.serverlessmapreducejava.shared.gcp.annotation.PubSubInput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 @Component
+@ConditionalOnProperty(value = "provider", havingValue = "gcp")
 public class PubSubInputPostProcessor implements BeanPostProcessor {
     @Autowired
     private ApplicationContext context;

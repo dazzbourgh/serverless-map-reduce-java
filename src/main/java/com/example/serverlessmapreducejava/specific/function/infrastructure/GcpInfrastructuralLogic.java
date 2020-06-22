@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.specific.functions.infrastructural;
+package com.example.serverlessmapreducejava.specific.function.infrastructure;
 
 import com.example.serverlessmapreducejava.specific.domain.gcp.GcsEvent;
 import com.example.serverlessmapreducejava.specific.domain.gcp.PubSubEvent;

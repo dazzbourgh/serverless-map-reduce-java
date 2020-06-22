@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.shared.annotation;
+package com.example.serverlessmapreducejava.shared.gcp.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

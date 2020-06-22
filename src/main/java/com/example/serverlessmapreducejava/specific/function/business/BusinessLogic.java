@@ -1,11 +1,11 @@
-package com.example.serverlessmapreducejava.specific.functions.business;
+package com.example.serverlessmapreducejava.specific.function.business;
 
 import com.example.serverlessmapreducejava.specific.domain.Animal;
 import com.example.serverlessmapreducejava.specific.domain.Classification;
-import com.example.serverlessmapreducejava.shared.annotation.PubSubInput;
-import com.example.serverlessmapreducejava.specific.utils.database.ClassificationDao;
-import com.example.serverlessmapreducejava.specific.utils.queue.QueueSender;
-import com.example.serverlessmapreducejava.specific.utils.storage.StorageService;
+import com.example.serverlessmapreducejava.shared.gcp.annotation.PubSubInput;
+import com.example.serverlessmapreducejava.specific.utils.ClassificationDao;
+import com.example.serverlessmapreducejava.specific.utils.QueueSender;
+import com.example.serverlessmapreducejava.specific.utils.StorageService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

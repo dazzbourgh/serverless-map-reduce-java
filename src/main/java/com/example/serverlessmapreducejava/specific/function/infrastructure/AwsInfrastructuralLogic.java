@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.specific.functions.infrastructural;
+package com.example.serverlessmapreducejava.specific.function.infrastructure;
 
 import com.example.serverlessmapreducejava.specific.domain.aws.AwsEvent;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

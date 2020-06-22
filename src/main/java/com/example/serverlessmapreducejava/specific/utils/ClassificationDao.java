@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.specific.utils.database;
+package com.example.serverlessmapreducejava.specific.utils;
 
 import com.example.serverlessmapreducejava.specific.domain.Classification;
 
