@@ -1,6 +1,6 @@
 package com.example.serverlessmapreducejava.specific.function.infrastructure;
 
-import com.example.serverlessmapreducejava.specific.domain.aws.AwsEvent;
+import com.example.serverlessmapreducejava.shared.aws.domain.AwsEvent;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 

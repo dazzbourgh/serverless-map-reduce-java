@@ -1,6 +1,6 @@
 package com.example.serverlessmapreducejava.shared.gcp.postprocessor;
 
-import com.example.serverlessmapreducejava.specific.domain.gcp.PubSubEvent;
+import com.example.serverlessmapreducejava.shared.gcp.domain.PubSubEvent;
 import com.example.serverlessmapreducejava.shared.gcp.annotation.PubSubInput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;

@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Classification {
-    private Animal animal;
+    private String type;
+    private boolean wild;
     private boolean favorite;
 }

@@ -1,9 +1,10 @@
 package com.example.serverlessmapreducejava.specific.function.business;
 
+import com.example.serverlessmapreducejava.shared.PipelineTerminalStage;
+import com.example.serverlessmapreducejava.shared.PipelineTerminalStage.PipelineStageInput;
+import com.example.serverlessmapreducejava.shared.PipelineTerminalStage.PipelineStageOutput;
 import com.example.serverlessmapreducejava.specific.domain.Animal;
 import com.example.serverlessmapreducejava.specific.domain.Classification;
-import com.example.serverlessmapreducejava.shared.gcp.annotation.PubSubInput;
-import com.example.serverlessmapreducejava.specific.utils.ClassificationDao;
 import com.example.serverlessmapreducejava.specific.utils.QueueSender;
 import com.example.serverlessmapreducejava.specific.utils.StorageService;
 import lombok.SneakyThrows;
@@ -16,6 +17,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static com.example.serverlessmapreducejava.shared.PipelineTerminalStage.InputOption.PUB_SUB_EVENT;
+import static com.example.serverlessmapreducejava.shared.PipelineTerminalStage.OutputOption.BIG_QUERY;
 import static java.util.concurrent.CompletableFuture.allOf;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
@@ -24,14 +27,11 @@ import static java.util.stream.Collectors.toList;
 public class BusinessLogic {
     private final Function<Animal, CompletableFuture<Void>> consume;
     private final StorageService storageService;
-    private final ClassificationDao classificationDao;
 
     public BusinessLogic(QueueSender queueSender,
                          @Value("${topic}") String topic,
-                         StorageService storageService,
-                         ClassificationDao classificationDao) {
+                         StorageService storageService) {
         this.storageService = storageService;
-        this.classificationDao = classificationDao;
         this.consume = animal -> queueSender.send(animal, topic);
     }
 
@@ -51,18 +51,17 @@ public class BusinessLogic {
     }
 
     @Bean
-    @PubSubInput(Animal.class)
+    @PipelineTerminalStage(
+            input = @PipelineStageInput(
+                    type = Animal.class,
+                    inputOption = PUB_SUB_EVENT),
+            output = @PipelineStageOutput(BIG_QUERY))
     public Function<Animal, Classification> classify() {
         // long running operation
         return animal -> {
-            boolean favorite = "snake".equalsIgnoreCase(animal.getType());
-            return new Classification(animal, favorite);
+            boolean favorite = !"snake".equalsIgnoreCase(animal.getType());
+            return new Classification(animal.getType(), animal.isWild(), favorite);
         };
-    }
-
-    @Bean
-    public Consumer<Classification> store() {
-        return classificationDao::save;
     }
 
     private Function<String, Animal> toAnimal() {

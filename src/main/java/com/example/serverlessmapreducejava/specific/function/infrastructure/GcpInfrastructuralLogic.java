@@ -1,7 +1,7 @@
 package com.example.serverlessmapreducejava.specific.function.infrastructure;
 
-import com.example.serverlessmapreducejava.specific.domain.gcp.GcsEvent;
-import com.example.serverlessmapreducejava.specific.domain.gcp.PubSubEvent;
+import com.example.serverlessmapreducejava.shared.gcp.domain.GcsEvent;
+import com.example.serverlessmapreducejava.shared.gcp.domain.PubSubEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
