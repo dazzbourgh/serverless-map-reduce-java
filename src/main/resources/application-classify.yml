@@ -1,4 +1,4 @@
 spring:
   cloud:
     function:
-      definition: extractAnimal|classify|store
+      definition: classify|store
