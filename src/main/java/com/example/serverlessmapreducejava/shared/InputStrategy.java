@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.shared.gcp.postprocessor.strategy;
+package com.example.serverlessmapreducejava.shared;
 
 public interface InputStrategy {
     Object extract(Object o, Class<?> type);

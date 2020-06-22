@@ -1,6 +1,6 @@
-package com.example.serverlessmapreducejava.specific.utils.gcp;
+package com.example.serverlessmapreducejava.intermediate.utils.gcp;
 
-import com.example.serverlessmapreducejava.specific.utils.StorageService;
+import com.example.serverlessmapreducejava.intermediate.utils.StorageService;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;

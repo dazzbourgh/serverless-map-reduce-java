@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.specific.configuration;
+package com.example.serverlessmapreducejava.intermediate.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;

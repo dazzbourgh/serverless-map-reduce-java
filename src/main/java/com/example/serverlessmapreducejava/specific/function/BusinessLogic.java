@@ -1,12 +1,12 @@
-package com.example.serverlessmapreducejava.specific.function.business;
+package com.example.serverlessmapreducejava.specific.function;
 
-import com.example.serverlessmapreducejava.shared.PipelineTerminalStage;
-import com.example.serverlessmapreducejava.shared.PipelineTerminalStage.PipelineStageInput;
-import com.example.serverlessmapreducejava.shared.PipelineTerminalStage.PipelineStageOutput;
+import com.example.serverlessmapreducejava.shared.PipelineStage;
+import com.example.serverlessmapreducejava.shared.PipelineStage.PipelineStageInput;
+import com.example.serverlessmapreducejava.shared.PipelineStage.PipelineStageOutput;
 import com.example.serverlessmapreducejava.specific.domain.Animal;
 import com.example.serverlessmapreducejava.specific.domain.Classification;
-import com.example.serverlessmapreducejava.specific.utils.QueueSender;
-import com.example.serverlessmapreducejava.specific.utils.StorageService;
+import com.example.serverlessmapreducejava.intermediate.utils.QueueSender;
+import com.example.serverlessmapreducejava.intermediate.utils.StorageService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +17,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static com.example.serverlessmapreducejava.shared.PipelineTerminalStage.InputOption.PUB_SUB_EVENT;
-import static com.example.serverlessmapreducejava.shared.PipelineTerminalStage.OutputOption.BIG_QUERY;
+import static com.example.serverlessmapreducejava.shared.PipelineStage.InputOption.PUB_SUB_EVENT;
+import static com.example.serverlessmapreducejava.shared.PipelineStage.OutputOption.BIG_QUERY;
 import static java.util.concurrent.CompletableFuture.allOf;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
@@ -51,7 +51,7 @@ public class BusinessLogic {
     }
 
     @Bean
-    @PipelineTerminalStage(
+    @PipelineStage(
             input = @PipelineStageInput(
                     type = Animal.class,
                     inputOption = PUB_SUB_EVENT),

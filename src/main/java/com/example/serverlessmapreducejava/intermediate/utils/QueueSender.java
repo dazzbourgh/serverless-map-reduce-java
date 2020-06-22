@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.specific.utils;
+package com.example.serverlessmapreducejava.intermediate.utils;
 
 import java.util.concurrent.CompletableFuture;
 

@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.specific.log;
+package com.example.serverlessmapreducejava.intermediate.log;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.SneakyThrows;
@@ -16,7 +16,7 @@ public class QueueSenderLogger {
     @Autowired
     public ObjectWriter objectWriter;
 
-    @Pointcut("execution(* com.example.serverlessmapreducejava.specific.utils.QueueSender.send(..))")
+    @Pointcut("execution(* com.example.serverlessmapreducejava.intermediate.utils.QueueSender.send(..))")
     public void beforeQueueSenderSend() {}
 
     @Before("beforeQueueSenderSend() && args(object, topic)")

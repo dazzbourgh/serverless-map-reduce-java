@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.specific.configuration;
+package com.example.serverlessmapreducejava.intermediate.configuration;
 
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;

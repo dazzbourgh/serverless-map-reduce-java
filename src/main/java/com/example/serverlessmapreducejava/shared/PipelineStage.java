@@ -8,7 +8,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({METHOD, TYPE})
 @Retention(RUNTIME)
-public @interface PipelineTerminalStage {
+public @interface PipelineStage {
     PipelineStageInput input();
     PipelineStageOutput output();
 
@@ -26,16 +26,32 @@ public @interface PipelineTerminalStage {
     }
 
     enum OutputOption {
-        PUB_SUB,
-        BIG_QUERY,
-        SQS,
-        DYNAMO_DB
+        BIG_QUERY("bigQuerySaveOperation"),
+        DYNAMO_DB("dynamoDbSaveOperation");
+
+        private final String name;
+
+        public String getName() {
+            return name;
+        }
+
+        OutputOption(String name) {
+            this.name = name;
+        }
     }
 
     enum InputOption {
-        PUB_SUB_EVENT,
-        GCS_EVENT,
-        S3_EVENT,
-        SQS_EVENT
+        PUB_SUB_EVENT("pubSubStrategy"),
+        SQS_EVENT("sqsEventStrategy");
+
+        private final String name;
+
+        public String getName() {
+            return name;
+        }
+
+        InputOption(String name) {
+            this.name = name;
+        }
     }
 }

@@ -1,6 +1,6 @@
-package com.example.serverlessmapreducejava.specific.utils.gcp;
+package com.example.serverlessmapreducejava.intermediate.utils.gcp;
 
-import com.example.serverlessmapreducejava.specific.utils.QueueSender;
+import com.example.serverlessmapreducejava.intermediate.utils.QueueSender;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;

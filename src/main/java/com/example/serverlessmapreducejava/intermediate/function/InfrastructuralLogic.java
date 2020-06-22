@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.specific.function.infrastructure;
+package com.example.serverlessmapreducejava.intermediate.function;
 
 import java.util.function.Function;
 
