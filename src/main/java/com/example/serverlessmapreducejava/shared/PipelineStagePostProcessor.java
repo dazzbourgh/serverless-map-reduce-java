@@ -1,11 +1,8 @@
 package com.example.serverlessmapreducejava.shared;
 
-import com.example.serverlessmapreducejava.shared.InputStrategy;
-import com.example.serverlessmapreducejava.shared.PipelineStage;
-import com.example.serverlessmapreducejava.shared.PipelineTerminalOperation;
 import com.example.serverlessmapreducejava.shared.gcp.domain.PubSubEvent;
-import com.example.serverlessmapreducejava.shared.gcp.utils.BigQuerySaveOperation;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -19,18 +16,12 @@ import java.util.Set;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor
 public class PipelineStagePostProcessor implements BeanPostProcessor {
-    @Autowired
-    private ApplicationContext context;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private BigQuerySaveOperation bigQuerySaveOperation;
     private Set<String> beans;
-    @Autowired
-    private Map<String, InputStrategy> inputStrategies;
-    @Autowired
-    private Map<String, PipelineTerminalOperation> terminalOperations;
+    private final ApplicationContext context;
+    private final Map<String, InputStrategy> inputStrategies;
+    private final Map<String, PipelineTerminalOperation> terminalOperations;
 
     @PostConstruct
     private void init() {
@@ -47,6 +38,7 @@ public class PipelineStagePostProcessor implements BeanPostProcessor {
             var inputOption = input.inputOption();
             var inputType = input.type();
             var outputOption = pipelineStageOutput.value();
+            // TODO: change generic parameters to be generic and not Pub/Sub specific
             return new Function<PubSubEvent, Object>() {
                 @Override
                 public Object apply(PubSubEvent pubSubEvent) {

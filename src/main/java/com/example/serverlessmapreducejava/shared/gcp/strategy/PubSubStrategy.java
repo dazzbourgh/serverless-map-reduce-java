@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Base64;
 
-// TODO: properly generify
 @Component
 public class PubSubStrategy implements InputStrategy {
     @Autowired

@@ -1,12 +1,11 @@
 package com.example.serverlessmapreducejava.intermediate.utils.aws;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.example.serverlessmapreducejava.intermediate.utils.StorageService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,12 +15,15 @@ import java.util.stream.Stream;
 @ConditionalOnProperty(value = "provider", havingValue = "aws")
 @AllArgsConstructor
 public class S3StorageService implements StorageService {
-    private final AmazonS3 s3;
+    private final S3Client s3;
 
     @Override
     public Stream<String> get(String bucket, String key) {
-        S3Object o = s3.getObject(bucket, key);
-        S3ObjectInputStream s3ObjectInputStream = o.getObjectContent();
-        return new BufferedReader(new InputStreamReader(s3ObjectInputStream)).lines();
+        var getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
+        var response = s3.getObject(getObjectRequest);
+        return new BufferedReader(new InputStreamReader(response)).lines();
     }
 }
