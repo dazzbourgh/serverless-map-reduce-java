@@ -1,17 +1,19 @@
 package com.example.serverlessmapreducejava.specific.function;
 
+import com.example.serverlessmapreducejava.intermediate.domain.StorageObject;
+import com.example.serverlessmapreducejava.intermediate.utils.QueueSender;
+import com.example.serverlessmapreducejava.intermediate.utils.StorageService;
 import com.example.serverlessmapreducejava.shared.PipelineStage;
 import com.example.serverlessmapreducejava.shared.PipelineStage.PipelineStageInput;
 import com.example.serverlessmapreducejava.shared.PipelineStage.PipelineStageOutput;
 import com.example.serverlessmapreducejava.specific.domain.Animal;
 import com.example.serverlessmapreducejava.specific.domain.Classification;
-import com.example.serverlessmapreducejava.intermediate.utils.QueueSender;
-import com.example.serverlessmapreducejava.intermediate.utils.StorageService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -36,17 +38,18 @@ public class BusinessLogic {
     }
 
     @Bean
-    public Consumer<String> read() {
-        return pathString -> {
-            try (Stream<String> lines = storageService.get(pathString)) {
-                var future = lines
-                        .skip(1)
-                        .map(toAnimal())
-                        .map(consume)
-                        .collect(collectingAndThen(toList(),
-                                futures -> allOf(futures.toArray(new CompletableFuture[0]))));
-                await(future);
-            }
+    public Consumer<List<StorageObject>> read() {
+        return storageObjects -> {
+            var future = storageObjects.stream().flatMap(object -> {
+                try (Stream<String> lines = storageService.get(object.getBucket(), object.getKey())) {
+                    return lines
+                            .skip(1)
+                            .map(toAnimal())
+                            .map(consume);
+                }
+            }).collect(collectingAndThen(toList(),
+                    futures -> allOf(futures.toArray(new CompletableFuture[0]))));
+            await(future);
         };
     }
 
