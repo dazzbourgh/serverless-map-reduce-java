@@ -1,5 +1,7 @@
 package com.example.serverlessmapreducejava.shared;
 
+import java.util.stream.Stream;
+
 public interface InputStrategy {
-    Object extract(Object o, Class<?> type);
+    Stream<?> extract(Object o, Class<?> type);
 }

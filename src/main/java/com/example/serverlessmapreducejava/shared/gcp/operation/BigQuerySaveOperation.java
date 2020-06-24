@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.shared.gcp.utils;
+package com.example.serverlessmapreducejava.shared.gcp.operation;
 
 import com.example.serverlessmapreducejava.shared.PipelineTerminalOperation;
 import com.google.cloud.bigquery.BigQuery;
@@ -7,19 +7,23 @@ import com.google.cloud.bigquery.InsertAllRequest;
 import com.google.cloud.bigquery.TableId;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.example.serverlessmapreducejava.shared.util.FieldsUtil.getFieldsMap;
+import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 
-@Repository
+@Component
 @ConditionalOnProperty(value = "provider", havingValue = "gcp")
 public class BigQuerySaveOperation implements PipelineTerminalOperation {
     private final String datasetName;
@@ -37,16 +41,10 @@ public class BigQuerySaveOperation implements PipelineTerminalOperation {
     @Override
     public void accept(Object object) {
         var tableId = TableId.of(datasetName, tableName);
-        var rowContent = new HashMap<String, Object>();
-        Stream.of(object.getClass().getMethods())
-                .filter(method -> method.getName().startsWith("get") || method.getName().startsWith("is"))
-                .filter(method -> !method.getName().endsWith("Class"))
-                .filter(method -> method.canAccess(object))
-                .map(method -> getPair(object, method))
-                .forEach(pair -> rowContent.put(pair.left, pair.right));
+        Map<String, Object> fields = getFieldsMap(object);
         var result = bigQuery.insertAll(
                 InsertAllRequest.newBuilder(tableId)
-                        .addRow(rowContent)
+                        .addRow(fields)
                         .build());
         if (result.hasErrors()) {
             throw new RuntimeException(result.getInsertErrors().values()
@@ -56,13 +54,5 @@ public class BigQuerySaveOperation implements PipelineTerminalOperation {
                     .collect(Collectors.joining("\n"))
             );
         }
-    }
-
-    @SneakyThrows
-    private ImmutablePair<String, Object> getPair(Object object, Method method) {
-        var separator = method.getName().startsWith("get") ? "get" : "is";
-        return new ImmutablePair<>(
-                substringAfter(method.getName(), separator).toLowerCase(),
-                method.invoke(object));
     }
 }

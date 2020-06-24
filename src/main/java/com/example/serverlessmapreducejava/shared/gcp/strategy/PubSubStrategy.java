@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
+import java.util.stream.Stream;
 
 @Component
 public class PubSubStrategy implements InputStrategy {
@@ -16,8 +17,8 @@ public class PubSubStrategy implements InputStrategy {
 
     @Override
     @SneakyThrows
-    public Object extract(Object evt, Class<?> type) {
+    public Stream<?> extract(Object evt, Class<?> type) {
         String data = new String(Base64.getDecoder().decode(((PubSubEvent) evt).getData()));
-        return objectMapper.readValue(data, type);
+        return Stream.of(objectMapper.readValue(data, type));
     }
 }
