@@ -1,9 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Fetches jumoresques and reads them out loud in funny voice
-Parameters:
-  Env:
-    Type: String
 Resources:
   AnimalsBucket:
     Type: AWS::S3::Bucket
