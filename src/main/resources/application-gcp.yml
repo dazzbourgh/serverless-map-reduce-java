@@ -7,3 +7,4 @@ gcp:
     table:
       name: ${BIGQUERY_TABLE_NAME}
 topic: ${PUBSUB_TOPIC}
+provider: gcp

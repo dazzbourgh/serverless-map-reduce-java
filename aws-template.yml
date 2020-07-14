@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Fetches jumoresques and reads them out loud in funny voice
+Parameters:
+  Env:
+    Type: String
+Resources:
+  AnimalsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      NotificationConfiguration:
+        QueueConfigurations:
+          - Event: s3:ObjectCreated:*
+            Queue: !GetAtt Mp3Sqs.Arn
+    DependsOn: Mp3SqsPolicy
+  ClassificationDynamoTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: type
+          AttributeType: S
+      KeySchema:
+        - AttributeName: type
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+  AnimalSqs:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt AnimalDeadLetterSqs.Arn
+        maxReceiveCount: 10
+  AnimalDeadLetterSqs:
+    Type: AWS::SQS::Queue
+  ReadAnimals:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker.handleRequest
+      Runtime: java11
+      CodeUri: target/serverless-map-reduce-java-0.0.1-SNAPSHOT-aws.jar
+      Policies:
+        - S3ReadPolicy:
+            BucketName:
+              !Ref AnimalsBucket
+        - SQSSendMessagePolicy:
+            QueueName:
+              !GetAtt AnimalSqs.QueueName
+      Events:
+        PutCsv:
+          Type: S3
+          Properties:
+            Bucket: !Ref AnimalsBucket
+            Events: s3:ObjectCreated:*
+      Timeout: 15
+  ClassifyAnimals:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker.handleRequest
+      Runtime: java11
+      CodeUri: target/serverless-map-reduce-java-0.0.1-SNAPSHOT-aws.jar
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName:
+              !Ref ClassificationDynamoTable
+        - SQSPollerPolicy:
+            QueueName:
+              !GetAtt AnimalSqs.QueueName
+      Events:
+        AnimalQueued:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt AnimalSqs.Arn
+            BatchSize: 1
+      Timeout: 15
