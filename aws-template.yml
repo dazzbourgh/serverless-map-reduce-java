@@ -8,8 +8,39 @@ Resources:
       NotificationConfiguration:
         QueueConfigurations:
           - Event: s3:ObjectCreated:*
-            Queue: !GetAtt Mp3Sqs.Arn
-    DependsOn: Mp3SqsPolicy
+            Queue: !GetAtt CsvSqs.Arn
+    DependsOn: CsvSqsPolicy
+  CsvSqs:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt CsvDeadLetterSqs.Arn
+        maxReceiveCount: 1
+  CsvDeadLetterSqs:
+    Type: AWS::SQS::Queue
+  CsvSqsPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: s3.amazonaws.com
+            Resource:
+              - !GetAtt CsvSqs.Arn
+            Action:
+              - SQS:SendMessage
+      Queues:
+        - !Ref CsvSqs
+  AnimalSqs:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt AnimalDeadLetterSqs.Arn
+        maxReceiveCount: 10
+  AnimalDeadLetterSqs:
+    Type: AWS::SQS::Queue
   ClassificationDynamoTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -20,18 +51,10 @@ Resources:
         - AttributeName: type
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
-  AnimalSqs:
-    Type: AWS::SQS::Queue
-    Properties:
-      RedrivePolicy:
-        deadLetterTargetArn: !GetAtt AnimalDeadLetterSqs.Arn
-        maxReceiveCount: 10
-  AnimalDeadLetterSqs:
-    Type: AWS::SQS::Queue
   ReadAnimals:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker.handleRequest
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker
       Runtime: java11
       CodeUri: target/serverless-map-reduce-java-0.0.1-SNAPSHOT-aws.jar
       Policies:
@@ -41,13 +64,28 @@ Resources:
         - SQSSendMessagePolicy:
             QueueName:
               !GetAtt AnimalSqs.QueueName
+        - SQSPollerPolicy:
+            QueueName:
+              !GetAtt CsvSqs.QueueName
       Events:
         PutCsv:
-          Type: S3
+          Type: SQS
           Properties:
-            Bucket: !Ref AnimalsBucket
-            Events: s3:ObjectCreated:*
+            Queue: !GetAtt CsvSqs.Arn
+            BatchSize: 1
       Timeout: 15
+      MemorySize: 512
+      Environment:
+        Variables:
+          SQS_TOPIC: !Ref AnimalSqs
+          SPRING_PROFILES_ACTIVE: aws,read
+  ReadAnimalsPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref ReadAnimals
+      Principal: s3.amazonaws.com
+      SourceArn: arn:aws:s3:::amimals-bucket
   ClassifyAnimals:
     Type: AWS::Serverless::Function
     Properties:
@@ -68,3 +106,8 @@ Resources:
             Queue: !GetAtt AnimalSqs.Arn
             BatchSize: 1
       Timeout: 15
+      MemorySize: 512
+      Environment:
+        Variables:
+          DYNAMO_TABLE: !Ref ClassificationDynamoTable
+          SPRING_PROFILES_ACTIVE: aws,classify

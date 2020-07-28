@@ -1,2 +1,7 @@
 region: us-west1
 provider: aws
+#todo
+topic: ${SQS_TOPIC}
+aws:
+  dynamo:
+    table: ${DYNAMO_TABLE}
