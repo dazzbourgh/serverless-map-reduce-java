@@ -17,11 +17,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
-import static com.example.serverlessmapreducejava.shared.PipelineStage.InputOption.PUB_SUB_EVENT;
 import static com.example.serverlessmapreducejava.shared.PipelineStage.InputOption.SQS_EVENT;
-import static com.example.serverlessmapreducejava.shared.PipelineStage.OutputOption.BIG_QUERY;
 import static com.example.serverlessmapreducejava.shared.PipelineStage.OutputOption.DYNAMO_DB;
 import static java.util.concurrent.CompletableFuture.allOf;
 import static java.util.stream.Collectors.collectingAndThen;
@@ -42,15 +39,14 @@ public class BusinessLogic {
     @Bean
     public Consumer<List<StorageObject>> read() {
         return storageObjects -> {
-            var future = storageObjects.stream().flatMap(object -> {
-                try (Stream<String> lines = storageService.get(object.getBucket(), object.getKey())) {
-                    return lines
-                            .skip(1)
-                            .map(toAnimal())
-                            .map(consume);
-                }
-            }).collect(collectingAndThen(toList(),
-                    futures -> allOf(futures.toArray(new CompletableFuture[0]))));
+            var future = storageObjects.stream()
+                    .flatMap(object ->
+                            storageService.get(object.getBucket(), object.getKey())
+                                    .skip(1)
+                                    .map(toAnimal())
+                                    .map(consume)
+                    ).collect(collectingAndThen(toList(),
+                            futures -> allOf(futures.toArray(new CompletableFuture[0]))));
             await(future);
         };
     }

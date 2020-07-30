@@ -22,7 +22,7 @@ public class QueueSenderLogger {
     @Before("beforeQueueSenderSend() && args(object, topic)")
     @SneakyThrows
     public void logging(Object object, String topic) {
-        log.info(String.format("Sending message to Pub/Sub, topic: %s, message:\n%s",
+        log.info(String.format("Sending message to queue, topic: %s, message:\n%s",
                 topic, objectWriter.writeValueAsString(object)));
     }
 }
