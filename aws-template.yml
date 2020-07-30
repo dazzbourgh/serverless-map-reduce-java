@@ -89,7 +89,7 @@ Resources:
   ClassifyAnimals:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker.handleRequest
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker
       Runtime: java11
       CodeUri: target/serverless-map-reduce-java-0.0.1-SNAPSHOT-aws.jar
       Policies:
