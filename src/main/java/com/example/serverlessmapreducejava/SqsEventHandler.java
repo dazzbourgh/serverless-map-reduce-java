@@ -3,7 +3,6 @@ package com.example.serverlessmapreducejava;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -26,7 +25,6 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 import java.util.function.Function;
 
 @Slf4j
@@ -47,32 +45,6 @@ public class SqsEventHandler implements RequestHandler<Object, String> {
     public String handleRequest(Object input, Context context) {
         function.apply(input);
         return "success";
-    }
-
-    public static void main(String[] args) throws JsonProcessingException {
-        var handler = new SqsEventHandler();
-        var request = "{\n" +
-                "  \"Records\": [\n" +
-                "    {\n" +
-                "      \"messageId\": \"19dd0b57-b21e-4ac1-bd88-01bbb068cb78\",\n" +
-                "      \"receiptHandle\": \"MessageReceiptHandle\",\n" +
-                "      \"body\": \"{\\\"type\\\":\\\"cat\\\",\\\"wild\\\":false}}\",\n" +
-                "      \"attributes\": {\n" +
-                "        \"ApproximateReceiveCount\": \"1\",\n" +
-                "        \"SentTimestamp\": \"1523232000000\",\n" +
-                "        \"SenderId\": \"123456789012\",\n" +
-                "        \"ApproximateFirstReceiveTimestamp\": \"1523232000001\"\n" +
-                "      },\n" +
-                "      \"messageAttributes\": {},\n" +
-                "      \"md5OfBody\": \"7b270e59b47ff90a553787216d55d91d\",\n" +
-                "      \"eventSource\": \"aws:sqs\",\n" +
-                "      \"eventSourceARN\": \"arn:{partition}:sqs:{region}:123456789012:MyQueue\",\n" +
-                "      \"awsRegion\": \"{region}\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";
-        var event = new ObjectMapper().readValue(request, Map.class);
-        handler.handleRequest(event, null);
     }
 
     private void start() {
