@@ -1,9 +1,7 @@
 package com.example.serverlessmapreducejava.shared.aws.operation;
 
 import com.example.serverlessmapreducejava.shared.PipelineTerminalOperation;
-import com.example.serverlessmapreducejava.shared.util.FieldsUtil;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -17,7 +15,7 @@ import java.util.stream.Collectors;
 import static com.example.serverlessmapreducejava.shared.util.FieldsUtil.getFieldsMap;
 
 @Component
-@ConditionalOnProperty(value = "provider", havingValue = "gcp")
+@ConditionalOnProperty(value = "provider", havingValue = "aws")
 public class DynamoDbSaveOperation implements PipelineTerminalOperation {
     private final String tableName;
     private final DynamoDbAsyncClient dynamoDbAsyncClient;
@@ -29,12 +27,16 @@ public class DynamoDbSaveOperation implements PipelineTerminalOperation {
     }
 
     @Override
+    @SneakyThrows
     public void accept(Object o) {
         var items = getFieldsMap(o).entrySet()
                 .stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> toValue(entry.getValue())));
-        var request = PutItemRequest.builder().item(items).build();
-        dynamoDbAsyncClient.putItem(request);
+        var request = PutItemRequest.builder()
+                .item(items)
+                .tableName(tableName)
+                .build();
+        dynamoDbAsyncClient.putItem(request).get();
     }
 
     private AttributeValue toValue(Object object) {

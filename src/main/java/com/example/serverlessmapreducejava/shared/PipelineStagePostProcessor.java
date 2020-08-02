@@ -1,14 +1,15 @@
 package com.example.serverlessmapreducejava.shared;
 
-import com.example.serverlessmapreducejava.shared.aws.domain.SqsEvent;
 import com.example.serverlessmapreducejava.shared.gcp.domain.PubSubEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PipelineStagePostProcessor implements BeanPostProcessor {
     private Set<String> beans;
     private Map<String, Class<?>> strategyToEventTypeMap;
@@ -31,7 +33,7 @@ public class PipelineStagePostProcessor implements BeanPostProcessor {
         beans = Set.of(context.getBeanNamesForAnnotation(PipelineStage.class));
         strategyToEventTypeMap = Map.of(
                 "pubSubStragy", PubSubEvent.class,
-                "sqsEventStrategy", SqsEvent.class
+                "sqsEventStrategy", LinkedHashMap.class
         );
     }
 
@@ -47,10 +49,7 @@ public class PipelineStagePostProcessor implements BeanPostProcessor {
             var outputOption = pipelineStageOutput.value();
             return (Function<Object, Object>) eventObject -> {
                 Optional.ofNullable(inputStrategies.get(inputOption.getName()))
-                        .map(strategy ->
-                                strategy.extract(
-                                        strategyToEventTypeMap.get(inputOption.getName()).cast(eventObject),
-                                        inputType))
+                        .map(toBusinessObjects(inputOption, inputType, eventObject))
                         .orElseGet(Stream::empty)
                         .map(extractedData -> ((Function) bean).apply(extractedData))
                         .forEach(terminalOperations.get(outputOption.getName())::accept);
@@ -62,5 +61,15 @@ public class PipelineStagePostProcessor implements BeanPostProcessor {
         } else {
             return bean;
         }
+    }
+
+    private Function<InputStrategy, Stream<?>> toBusinessObjects(
+            PipelineStage.InputOption inputOption,
+            Class<?> inputType,
+            Object eventObject) {
+        return strategy -> strategy.extract(
+                strategyToEventTypeMap.get(inputOption.getName())
+                        .cast(eventObject),
+                inputType);
     }
 }

@@ -78,6 +78,7 @@ Resources:
       Environment:
         Variables:
           SQS_TOPIC: !Ref AnimalSqs
+          DYNAMO_TABLE: !Ref ClassificationDynamoTable
           SPRING_PROFILES_ACTIVE: aws,read
   ReadAnimalsPermission:
     Type: AWS::Lambda::Permission
@@ -89,7 +90,7 @@ Resources:
   ClassifyAnimals:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker
+      Handler: com.example.serverlessmapreducejava.SqsEventHandler
       Runtime: java11
       CodeUri: target/serverless-map-reduce-java-0.0.1-SNAPSHOT-aws.jar
       Policies:
@@ -111,3 +112,4 @@ Resources:
         Variables:
           DYNAMO_TABLE: !Ref ClassificationDynamoTable
           SPRING_PROFILES_ACTIVE: aws,classify
+          SQS_TOPIC: !Ref AnimalSqs

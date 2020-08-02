@@ -60,7 +60,8 @@ public class BusinessLogic {
     public Function<Animal, Classification> classify() {
         // long running operation
         return animal -> {
-            boolean favorite = !"snake".equalsIgnoreCase(animal.getType());
+            boolean favorite = !"snake".equalsIgnoreCase(animal.getType())
+                    && !"spider".equalsIgnoreCase(animal.getType());
             return new Classification(animal.getType(), animal.isWild(), favorite);
         };
     }
