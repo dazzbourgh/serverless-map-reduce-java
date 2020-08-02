@@ -32,7 +32,7 @@ public class PipelineStagePostProcessor implements BeanPostProcessor {
         // TODO: maybe better have commands that incorporate both?
         beans = Set.of(context.getBeanNamesForAnnotation(PipelineStage.class));
         strategyToEventTypeMap = Map.of(
-                "pubSubStragy", PubSubEvent.class,
+                "pubSubStrategy", PubSubEvent.class,
                 "sqsEventStrategy", LinkedHashMap.class
         );
     }
