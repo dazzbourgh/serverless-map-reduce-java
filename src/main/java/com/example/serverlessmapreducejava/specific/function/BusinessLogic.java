@@ -18,9 +18,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.example.serverlessmapreducejava.shared.PipelineStage.InputOption.PUB_SUB_EVENT;
 import static com.example.serverlessmapreducejava.shared.PipelineStage.InputOption.SQS_EVENT;
-import static com.example.serverlessmapreducejava.shared.PipelineStage.OutputOption.BIG_QUERY;
 import static com.example.serverlessmapreducejava.shared.PipelineStage.OutputOption.DYNAMO_DB;
 import static java.util.concurrent.CompletableFuture.allOf;
 import static java.util.stream.Collectors.collectingAndThen;
