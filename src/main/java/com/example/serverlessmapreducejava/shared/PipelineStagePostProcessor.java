@@ -48,6 +48,7 @@ public class PipelineStagePostProcessor implements BeanPostProcessor {
             var inputType = input.type();
             var outputOption = pipelineStageOutput.value();
             return (Function<Object, Object>) eventObject -> {
+                log.info("Received event: {}", eventObject);
                 Optional.ofNullable(inputStrategies.get(inputOption.getName()))
                         .map(toBusinessObjects(inputOption, inputType, eventObject))
                         .orElseGet(Stream::empty)
