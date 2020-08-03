@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.shared.gcp.domain;
+package com.example.serverlessmapreducejava.shared.vendor.gcp.domain;
 
 import lombok.Data;
 

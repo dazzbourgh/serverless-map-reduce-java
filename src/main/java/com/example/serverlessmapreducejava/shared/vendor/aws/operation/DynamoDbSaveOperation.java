@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.shared.aws.operation;
+package com.example.serverlessmapreducejava.shared.vendor.aws.operation;
 
 import com.example.serverlessmapreducejava.shared.PipelineTerminalOperation;
 import lombok.SneakyThrows;

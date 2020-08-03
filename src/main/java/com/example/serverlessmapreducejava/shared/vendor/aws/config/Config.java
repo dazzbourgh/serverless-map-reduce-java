@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.shared.aws.config;
+package com.example.serverlessmapreducejava.shared.vendor.aws.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

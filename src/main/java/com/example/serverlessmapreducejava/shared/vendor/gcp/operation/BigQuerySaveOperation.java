@@ -1,27 +1,19 @@
-package com.example.serverlessmapreducejava.shared.gcp.operation;
+package com.example.serverlessmapreducejava.shared.vendor.gcp.operation;
 
 import com.example.serverlessmapreducejava.shared.PipelineTerminalOperation;
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.BigQueryError;
 import com.google.cloud.bigquery.InsertAllRequest;
 import com.google.cloud.bigquery.TableId;
-import lombok.SneakyThrows;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.example.serverlessmapreducejava.shared.util.FieldsUtil.getFieldsMap;
-import static java.util.stream.Collectors.toMap;
-import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 @Component
 @ConditionalOnProperty(value = "provider", havingValue = "gcp")

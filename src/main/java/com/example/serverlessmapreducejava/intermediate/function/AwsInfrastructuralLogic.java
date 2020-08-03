@@ -19,6 +19,7 @@ import static java.util.stream.Collectors.toList;
 @ConditionalOnProperty(value = "provider", havingValue = "aws")
 public class AwsInfrastructuralLogic implements InfrastructuralLogic {
     private static final ObjectMapper mapper = new ObjectMapper();
+
     @Override
     @Bean
     public Function<SQSEvent, List<StorageObject>> extractFilePath() {

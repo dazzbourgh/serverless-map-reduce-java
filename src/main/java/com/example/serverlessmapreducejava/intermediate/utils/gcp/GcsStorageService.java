@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 @Service

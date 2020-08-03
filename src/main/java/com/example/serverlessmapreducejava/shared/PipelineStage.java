@@ -10,12 +10,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface PipelineStage {
     PipelineStageInput input();
+
     PipelineStageOutput output();
 
     @Target({METHOD, ANNOTATION_TYPE, PARAMETER})
     @Retention(RUNTIME)
     @interface PipelineStageInput {
         Class<?> type();
+
         InputOption inputOption();
     }
 

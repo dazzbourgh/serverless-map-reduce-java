@@ -17,7 +17,8 @@ public class QueueSenderLogger {
     public ObjectWriter objectWriter;
 
     @Pointcut("execution(* com.example.serverlessmapreducejava.intermediate.utils.QueueSender.send(..))")
-    public void beforeQueueSenderSend() {}
+    public void beforeQueueSenderSend() {
+    }
 
     @Before("beforeQueueSenderSend() && args(object, topic)")
     @SneakyThrows

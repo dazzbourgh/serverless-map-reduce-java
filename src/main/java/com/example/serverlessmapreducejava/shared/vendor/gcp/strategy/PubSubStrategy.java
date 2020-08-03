@@ -1,7 +1,7 @@
-package com.example.serverlessmapreducejava.shared.gcp.strategy;
+package com.example.serverlessmapreducejava.shared.vendor.gcp.strategy;
 
 import com.example.serverlessmapreducejava.shared.InputStrategy;
-import com.example.serverlessmapreducejava.shared.gcp.domain.PubSubEvent;
+import com.example.serverlessmapreducejava.shared.vendor.gcp.domain.PubSubEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;

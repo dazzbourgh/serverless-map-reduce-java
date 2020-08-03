@@ -1,7 +1,7 @@
 package com.example.serverlessmapreducejava.intermediate.function;
 
 import com.example.serverlessmapreducejava.intermediate.domain.StorageObject;
-import com.example.serverlessmapreducejava.shared.gcp.domain.GcsEvent;
+import com.example.serverlessmapreducejava.shared.vendor.gcp.domain.GcsEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

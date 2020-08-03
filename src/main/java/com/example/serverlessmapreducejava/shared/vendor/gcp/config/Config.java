@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.shared.gcp.config;
+package com.example.serverlessmapreducejava.shared.vendor.gcp.config;
 
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.BigQueryFactory;

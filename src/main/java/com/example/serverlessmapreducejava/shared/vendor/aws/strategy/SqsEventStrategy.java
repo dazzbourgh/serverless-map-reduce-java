@@ -1,4 +1,4 @@
-package com.example.serverlessmapreducejava.shared.aws.strategy;
+package com.example.serverlessmapreducejava.shared.vendor.aws.strategy;
 
 import com.example.serverlessmapreducejava.shared.InputStrategy;
 import com.fasterxml.jackson.databind.ObjectMapper;

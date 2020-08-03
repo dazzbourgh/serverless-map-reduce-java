@@ -1,6 +1,7 @@
 package com.example.serverlessmapreducejava.shared;
 
-import com.example.serverlessmapreducejava.shared.gcp.domain.PubSubEvent;
+import com.example.serverlessmapreducejava.shared.function.FunctionFactory;
+import com.example.serverlessmapreducejava.shared.vendor.gcp.domain.PubSubEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -26,6 +27,7 @@ public class PipelineStagePostProcessor implements BeanPostProcessor {
     private final ApplicationContext context;
     private final Map<String, InputStrategy> inputStrategies;
     private final Map<String, PipelineTerminalOperation> terminalOperations;
+    private final FunctionFactory functionFactory;
 
     @PostConstruct
     private void init() {
@@ -47,7 +49,7 @@ public class PipelineStagePostProcessor implements BeanPostProcessor {
             var inputOption = input.inputOption();
             var inputType = input.type();
             var outputOption = pipelineStageOutput.value();
-            return (Function<Object, Object>) eventObject -> {
+            return functionFactory.create(eventObject -> {
                 log.info("Received event: {}", eventObject);
                 Optional.ofNullable(inputStrategies.get(inputOption.getName()))
                         .map(toBusinessObjects(inputOption, inputType, eventObject))
@@ -58,7 +60,7 @@ public class PipelineStagePostProcessor implements BeanPostProcessor {
                 // Can't return Consumer<PubSub>, since the initial type is Function<Animal, Classification>,
                 // and can't use Consumer<Animal> as initial type since need to return mapped value of Classification
                 return null;
-            };
+            }, inputOption);
         } else {
             return bean;
         }
@@ -69,8 +71,7 @@ public class PipelineStagePostProcessor implements BeanPostProcessor {
             Class<?> inputType,
             Object eventObject) {
         return strategy -> strategy.extract(
-                strategyToEventTypeMap.get(inputOption.getName())
-                        .cast(eventObject),
+                strategyToEventTypeMap.get(inputOption.getName()).cast(eventObject),
                 inputType);
     }
 }

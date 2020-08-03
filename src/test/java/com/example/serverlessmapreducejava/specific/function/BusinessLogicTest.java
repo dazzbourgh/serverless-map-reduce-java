@@ -5,8 +5,6 @@ import com.example.serverlessmapreducejava.intermediate.utils.QueueSender;
 import com.example.serverlessmapreducejava.intermediate.utils.StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
