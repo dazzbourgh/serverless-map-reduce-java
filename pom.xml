@@ -17,6 +17,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
         <aws-lambda-events.version>2.0.2</aws-lambda-events.version>
+        <wrapper.version>1.0.17.RELEASE</wrapper.version>
         <spring-cloud-function.version>3.0.6.RELEASE</spring-cloud-function.version>
     </properties>
 
@@ -179,6 +180,7 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <configuration>
                     <skip>true</skip>
@@ -187,25 +189,21 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <outputDirectory>target/deploy</outputDirectory>
-                </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>org.springframework.cloud</groupId>
-                        <artifactId>spring-cloud-function-adapter-gcp</artifactId>
-                        <version>3.1.0-SNAPSHOT</version>
+                        <groupId>org.springframework.boot.experimental</groupId>
+                        <artifactId>spring-boot-thin-layout</artifactId>
+                        <version>${wrapper.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
-
             <plugin>
-                <groupId>com.google.cloud.functions</groupId>
-                <artifactId>function-maven-plugin</artifactId>
-                <version>0.9.1</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
                 <configuration>
-                    <functionTarget>org.springframework.cloud.function.adapter.gcp.GcfJarLauncher</functionTarget>
-                    <port>8080</port>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>aws</shadedClassifierName>
                 </configuration>
             </plugin>
         </plugins>
