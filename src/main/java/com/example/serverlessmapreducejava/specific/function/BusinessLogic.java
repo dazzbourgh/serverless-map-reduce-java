@@ -69,7 +69,7 @@ public class BusinessLogic {
     private Function<String, Animal> toAnimal() {
         return line -> {
             String[] words = line.split(",");
-            return new Animal(words[0], Boolean.getBoolean(words[1]));
+            return new Animal(words[0], Boolean.parseBoolean(words[1]));
         };
     }
 
