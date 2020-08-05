@@ -9,7 +9,6 @@ import com.example.serverlessmapreducejava.shared.PipelineStage.PipelineStageOut
 import com.example.serverlessmapreducejava.specific.domain.Animal;
 import com.example.serverlessmapreducejava.specific.domain.Classification;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -26,7 +25,6 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
 @Component
-@Slf4j
 public class BusinessLogic {
     private final Function<Animal, CompletableFuture<Void>> consume;
     private final StorageService storageService;
@@ -71,8 +69,7 @@ public class BusinessLogic {
     private Function<String, Animal> toAnimal() {
         return line -> {
             String[] words = line.split(",");
-            log.info("Words: {}", (Object[]) words);
-            return new Animal(words[0], Boolean.getBoolean(words[1]));
+            return new Animal(words[0], Boolean.parseBoolean(words[1]));
         };
     }
 
